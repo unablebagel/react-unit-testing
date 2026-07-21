@@ -1,10 +1,9 @@
-/* eslint-disable testing-library/await-async-utils */
 import { render, waitFor, screen } from "@testing-library/react";
 import TestingAPICalls from "../components/TestingAPICalls";
 import * as services from "../utils/services";
 
 describe("TestingAPICalls component", () => {
-  test("Fetch Data API Called", () => {
+  test("Fetch Data API Called", async () => {
     const mockFetch = jest
       .spyOn(services, "FetchData")
       .mockImplementation(async () => {
@@ -15,7 +14,7 @@ describe("TestingAPICalls component", () => {
 
     expect(mockFetch).toHaveBeenCalled();
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(screen.getByText(/kunal/i)).toBeInTheDocument();
     });
   });
