@@ -12,6 +12,8 @@ import jestPlugin from 'eslint-plugin-jest';              // Jest-specific lint 
 import testingLibraryPlugin from 'eslint-plugin-testing-library'; // @testing-library best-practice rules
 import babelParser from '@babel/eslint-parser';           // lets ESLint's parser understand JSX syntax
 import pluginSecurity from "eslint-plugin-security";      // security-focused rules (eval, ReDoS, unsafe Buffer, etc.)
+import securityNode from 'eslint-plugin-security-node';   // Node.js-specific security rules (CRLF injection, child_process, SQL/NoSQL injection, etc.)
+import noUnsanitized from 'eslint-plugin-no-unsanitized';  // flags unsafe DOM writes (innerHTML, document.write) that can lead to XSS
 
 export default defineConfig([
   // --- Block 1: applies to ALL source + test files (*.js, *.jsx) ---
@@ -38,12 +40,23 @@ export default defineConfig([
     plugins: {
       react: reactPlugin,
       security: pluginSecurity,
+      'security-node': securityNode,
+      'no-unsanitized': noUnsanitized,
     },
     rules: {
       // Spread = "turn on this plugin's whole recommended rule set", then override
       // individual rules below as needed instead of hand-picking every rule.
       ...reactPlugin.configs.recommended.rules,
       ...pluginSecurity.configs.recommended.rules,
+      // Node-focused rules (Express sessions, MySQL/NoSQL injection, child_process,
+      // etc.) - this app is browser-side CRA, not a Node server, so most of these
+      // won't fire on anything here, but they're on in case Node-side code (e.g. a
+      // custom server, build scripts) gets added later.
+      ...securityNode.configs.recommended.rules,
+      // Catches unsanitized values passed to innerHTML/outerHTML/document.write -
+      // the classic DOM-based XSS sink. Relevant even in React, since
+      // dangerouslySetInnerHTML and direct DOM refs can still introduce this.
+      ...noUnsanitized.configs.recommended.rules,
       // React 17+ doesn't require `import React` in every JSX file, so this legacy
       // rule (meant for React <17) would otherwise false-positive on every file.
       'react/react-in-jsx-scope': 'off',
