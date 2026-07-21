@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const TestWithMockDataWithBranching = ({
   data,
@@ -34,6 +35,20 @@ const TestWithMockDataWithBranching = ({
       )}
     </div>
   );
+};
+
+TestWithMockDataWithBranching.propTypes = {
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      first_name: PropTypes.string,
+      last_name: PropTypes.string,
+      email: PropTypes.string,
+      age: PropTypes.number,
+    })
+  ).isRequired,
+  displayUnorderedList: PropTypes.bool.isRequired,
+  handleClick: PropTypes.func,
 };
 
 export default TestWithMockDataWithBranching;

@@ -1,7 +1,7 @@
 /* eslint-disable testing-library/await-async-utils */
 import { render, waitFor, screen } from "@testing-library/react";
 import TestingAPICalls from "../components/TestingAPICalls";
-import * as services from "../utils/Services";
+import * as services from "../utils/services";
 
 describe("TestingAPICalls component", () => {
   test("Fetch Data API Called", () => {

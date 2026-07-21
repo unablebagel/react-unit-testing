@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FetchData } from "../utils/Services";
+import { FetchData } from "../utils/services";
 
 const TestingAPICalls = () => {
   const [data, setData] = useState([]);
@@ -11,8 +11,8 @@ const TestingAPICalls = () => {
 
   return (
     <div>
-      {data.map((item) => (
-        <div>{item.name}</div>
+      {data.map((item, index) => (
+        <div key={`${item.name}-${index}`}>{item.name}</div>
       ))}
     </div>
   );
